@@ -1,5 +1,7 @@
 from selenium import webdriver
 import time
+from bs4 import BeautifulSoup
+
 
 # Configuración del controlador del navegador
 # En este ejemplo se usará el controlador de Google Chrome
@@ -15,34 +17,48 @@ time.sleep(3)
 
 try:
     # Ejecutar la función JavaScript en la consola del navegador
-    driver.execute_script("opentab(event, 'filesystab', 'mainuitabscontent', 'mainuitablinks')")
+    driver.execute_script(
+        "opentab(event, 'filesystab', 'mainuitabscontent', 'mainuitablinks')")
     # driver.execute_script("mifuncion();")
-    
+
 except Exception as e:
     print("Dentro")
     html_content = driver.page_source
     content = html_content
 
-    #TODO aplicar la funcionalidad de seleccionar y ejecutar funciones: 
-    #Sacar el elemento
-    #Llamar la función del selectElement
-    #Guardar el position del elemento seleccionado
-    #llamar el onclick del play con el position almacenado
+    # TODO aplicar la funcionalidad de seleccionar y ejecutar funciones:
+    # Sacar el elemento
+    # Buscar el componente div y extraer su atributo onclick
+    time.sleep(5)
+    soup = BeautifulSoup(html_content, 'html.parser')
+    ul_element = soup.find(
+        'ul', {'id': 'files_fileList'})
+    if ul_element:
+        print(f"Onclick del elemento new_files_click_file")
+        ul_element.find_all('li')
 
+        contenido = ""
+        for li_elemento in ul_element:
+            div_elemento = li_elemento.find('div')
+            onclick_event = div_elemento['onclick']
+            print(f"On click event: {onclick_event}")
+            print("salto")
+            contenido += onclick_event
+        driver.execute_script("new_files_click_file(event, 22)")
+        content = contenido
+    else:
+        print("No se encontró el elemento con id new_files_click_file")
+    # print(ahref)
+    # Llamar la función del selectElement
+    # Guardar el position del elemento seleccionado
+    # llamar el onclick del play con el position almacenado
 
-    # Obtener los elementos de la lista
-    ul_element = driver.find_element_by_id("files_fileList")
-    li_elements = ul_element.find_elements_by_class_name("newlist-group-item")
-    
     # Imprimir los textos de los elementos li
-    contenido = ""
-    for li in li_elements:
-        contenido+=li
 
-    content = contenido
-    with open("1contentWEB.html", "w", encoding="utf-8") as file:
+    with open("veamos1.html", "w", encoding="utf-8") as file:
         file.write(content)
     time.sleep(15)
+
     print(f"Error al ejecutar la función: {e}")
 else:
     # Obtener el contenido HTML después de ejecutar la función
@@ -82,7 +98,7 @@ driver.quit()
 #     with open("file123abc.txt", "w", encoding="utf-8") as file:
 #         file.write(content)
 
-    
+
 # else:
 #     # Manejar el error
 #     print(f"Error al obtener index.html: {response.status_code}")
