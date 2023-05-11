@@ -44,8 +44,10 @@ except Exception as e:
             print(f"On click event: {onclick_event}")
             print("salto")
             contenido += onclick_event
-        driver.execute_script("new_files_click_file(event, 22)")
         content = contenido
+        # TODO Obtener el id y ejecutar la función dependiendo el id
+        # TODO Verificar que al ejecutar el boton play se ejecute la funcion correspondiente
+        driver.execute_script("new_files_click_file(event, 22)")
     else:
         print("No se encontró el elemento con id new_files_click_file")
     # print(ahref)
